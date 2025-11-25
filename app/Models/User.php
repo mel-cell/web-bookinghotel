@@ -55,4 +55,11 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasMany(Booking::class);
     }
+
+    public function discounts()
+    {
+        return $this->belongsToMany(Discount::class, 'user_discounts')
+            ->withPivot('is_used')
+            ->withTimestamps();
+    }
 }

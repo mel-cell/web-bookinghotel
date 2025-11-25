@@ -14,6 +14,8 @@ class Booking extends Model
         'jumlah_kamar',
         'total_harga',
         'status',
+        'payment_method',
+        'credit_card_number',
     ];
 
     protected $casts = [
