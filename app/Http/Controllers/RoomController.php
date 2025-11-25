@@ -13,6 +13,26 @@ class RoomController extends Controller
     {
         $query = Room::query();
 
+        // Search by name
+        if ($request->has('search') && $request->search) {
+            $query->where('nama_kamar', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter by status
+        if ($request->has('status') && $request->status) {
+            if ($request->status === 'available') {
+                $query->whereDoesntHave('bookings', function ($q) {
+                    $q->whereIn('status', ['confirmed', 'pending'])
+                      ->where('tgl_check_out', '>=', Carbon::today());
+                });
+            } elseif ($request->status === 'booked') {
+                $query->whereHas('bookings', function ($q) {
+                    $q->whereIn('status', ['confirmed', 'pending'])
+                      ->where('tgl_check_out', '>=', Carbon::today());
+                });
+            }
+        }
+
         // Filter by room type if provided
         if ($request->has('tipe_kamar') && $request->tipe_kamar) {
             $query->where('tipe_kamar', $request->tipe_kamar);
@@ -57,7 +77,35 @@ class RoomController extends Controller
     {
         $room->availability_status = $this->checkRoomAvailability($room);
         $room->load('reviews.user');
-        return view('rooms.show', compact('room'));
+
+        // Fetch booked dates
+        $bookedDates = \App\Models\Booking::where('room_id', $room->id)
+            ->whereIn('status', ['confirmed', 'pending'])
+            ->where('tgl_check_out', '>=', Carbon::today())
+            ->get(['tgl_check_in', 'tgl_check_out'])
+            ->map(function ($booking) {
+                return [
+                    'start' => $booking->tgl_check_in->format('Y-m-d'),
+                    'end' => $booking->tgl_check_out->format('Y-m-d'),
+                ];
+            });
+
+        // Fetch available discounts for authenticated user
+        $availableDiscounts = [];
+        if (auth()->check()) {
+            $user = auth()->user();
+            $availableDiscounts = \App\Models\Discount::where(function ($query) {
+                    $query->whereNull('expires_at')
+                          ->orWhere('expires_at', '>=', Carbon::today());
+                })
+                ->whereHas('users', function ($query) use ($user) {
+                    $query->where('user_id', $user->id)
+                          ->where('is_used', false);
+                })
+                ->get();
+        }
+
+        return view('rooms.show', compact('room', 'bookedDates', 'availableDiscounts'));
     }
 
     private function checkRoomAvailability(Room $room)

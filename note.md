@@ -1,100 +1,71 @@
-# Laravel Commands Cheat Sheet
+# Panduan Database & Seeding
 
-This note contains common Laravel commands for creating files, migrations, and other operations, with a focus on Filament, Breeze, and Livewire.
+Berikut adalah panduan untuk menjalankan migrasi database dan seeding data (pengisian data awal) dengan urutan yang benar agar tidak terjadi error relasi (foreign key).
 
-## General Laravel Commands
+## 1. Cara Cepat (Rekomendasi)
 
-### Creating Models, Controllers, and Migrations
-- Create a model: `php artisan make:model ModelName`
-- Create a model with migration: `php artisan make:model ModelName -m`
-- Create a controller: `php artisan make:controller ControllerName`
-- Create a resource controller: `php artisan make:controller ControllerName --resource`
-- Create a migration: `php artisan make:migration migration_name`
-- Create a seeder: `php artisan make:seeder SeederName`
-- Create a factory: `php artisan make:factory FactoryName`
+Untuk mereset ulang seluruh database dan mengisi semua data dummy sekaligus, jalankan perintah berikut:
 
-### Database Operations
-- Run migrations: `php artisan migrate`
-- Rollback last migration: `php artisan migrate:rollback`
-- Refresh migrations (rollback and run again): `php artisan migrate:refresh`
-- Reset migrations: `php artisan migrate:reset`
-- Seed database: `php artisan db:seed`
-- Migrate and seed: `php artisan migrate --seed`
+```bash
+php artisan migrate:fresh --seed
+```
 
-### Other Useful Commands
-- Create middleware: `php artisan make:middleware MiddlewareName`
-- Create request: `php artisan make:request RequestName`
-- Create event: `php artisan make:event EventName`
-- Create listener: `php artisan make:listener ListenerName`
-- Create job: `php artisan make:job JobName`
-- Create mail: `php artisan make:mail MailName`
-- Create notification: `php artisan make:notification NotificationName`
+Perintah ini akan:
 
-## Filament Commands
+1. Menghapus semua tabel yang ada.
+2. Membuat ulang tabel sesuai file migrasi.
+3. Menjalankan `DatabaseSeeder` yang sudah diatur urutannya.
 
-Filament is a Laravel admin panel builder.
+---
 
-### Creating Resources
-- Create a Filament resource: `php artisan make:filament-resource ResourceName`
-- Create a Filament resource for a model: `php artisan make:filament-resource ResourceName --model=ModelName`
-- Create a simple Filament resource: `php artisan make:filament-resource ResourceName --simple`
+## 2. Urutan Seeder (Jika dijalankan manual)
 
-### Creating Pages
-- Create a Filament page: `php artisan make:filament-page PageName`
-- Create a custom Filament page: `php artisan make:filament-page PageName --resource=ResourceName`
+Jika Anda ingin menjalankan seeder satu per satu, **WAJIB** mengikuti urutan berikut karena adanya ketergantungan data (relasi antar tabel):
 
-### Other Filament Commands
-- Install Filament: `php artisan filament:install`
-- Create a Filament user: `php artisan make:filament-user`
-- Create a Filament widget: `php artisan make:filament-widget WidgetName`
-- Create a Filament form: `php artisan make:filament-form FormName`
+1.  **Admin & User** (Harus ada user dulu sebelum bisa buat booking/review)
 
-## Breeze Commands
+    ```bash
+    php artisan db:seed --class=AdminUserSeeder
+    php artisan db:seed --class=UserSeeder
+    ```
 
-Laravel Breeze provides simple authentication scaffolding.
+2.  **Kamar (Rooms)** (Harus ada kamar dulu sebelum dibooking)
 
-### Installation and Setup
-- Install Breeze: `php artisan breeze:install`
-- Install Breeze with Blade: `php artisan breeze:install blade`
-- Install Breeze with React: `php artisan breeze:install react`
-- Install Breeze with Vue: `php artisan breeze:install vue`
-- Install Breeze with API: `php artisan breeze:install api`
+    ```bash
+    php artisan db:seed --class=RoomSeeder
+    ```
 
-### Publishing Assets
-- Publish Breeze config: `php artisan vendor:publish --tag=breeze-config`
-- Publish Breeze views: `php artisan vendor:publish --tag=breeze-views`
+3.  **Diskon (Discounts)** (Data master diskon)
 
-## Livewire Commands
+    ```bash
+    php artisan db:seed --class=DiscountSeeder
+    ```
 
-Livewire is a full-stack framework for Laravel.
+4.  **Booking** (Butuh data User & Room)
 
-### Creating Components
-- Create a Livewire component: `php artisan make:livewire ComponentName`
-- Create a Livewire component in a subdirectory: `php artisan make:livewire Subdirectory/ComponentName`
-- Create an inline Livewire component: `php artisan make:livewire ComponentName --inline`
+    ```bash
+    php artisan db:seed --class=BookingSeeder
+    ```
 
-### Publishing Assets
-- Publish Livewire config: `php artisan vendor:publish --tag=livewire-config`
-- Publish Livewire views: `php artisan vendor:publish --tag=livewire-views`
+5.  **Review** (Butuh data Booking yang statusnya 'selesai')
+    ```bash
+    php artisan db:seed --class=ReviewSeeder
+    ```
 
-## Combined Commands for Common Tasks
+---
 
-### Creating a Complete CRUD with Filament
-1. Create model with migration: `php artisan make:model Post -m`
-2. Create Filament resource: `php artisan make:filament-resource PostResource --model=Post`
+## 3. Akun Demo
 
-### Setting up Authentication with Breeze
-1. Install Breeze: `php artisan breeze:install`
-2. Run migrations: `php artisan migrate`
-3. Build assets: `npm install && npm run build`
+Setelah seeding berhasil, Anda bisa login menggunakan akun berikut:
 
-### Creating a Livewire Component
-1. Create component: `php artisan make:livewire Counter`
-2. Add to a Blade view: `@livewire('counter')`
+**Admin:**
 
-## Additional Tips
-- Always run `composer dump-autoload` after creating new classes
-- Use `php artisan list` to see all available commands
-- Use `php artisan help command-name` for detailed help on a specific command
-- For development, use `php artisan serve` to start the local server
-- Build assets with `npm run dev` or `npm run build`
+-   Email: `admin@admin.com`
+-   Password: `password`
+
+**Customer (User):**
+
+-   Email: `customer@example.com`
+-   Password: `password`
+
+_(Terdapat juga 5 user dummy lain yang dibuat secara acak)_

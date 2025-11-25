@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\BookingResource\Pages;
+use App\Filament\Resources\BookingResource\RelationManagers;
 use App\Models\Booking;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -16,7 +17,7 @@ class BookingResource extends Resource
 {
     protected static ?string $model = Booking::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -33,22 +34,30 @@ class BookingResource extends Resource
                 Forms\Components\DatePicker::make('tgl_check_out')
                     ->required(),
                 Forms\Components\TextInput::make('jumlah_kamar')
-                    ->numeric()
-                    ->default(1)
-                    ->required(),
-                Forms\Components\TextInput::make('total_harga')
-                    ->numeric()
                     ->required()
+                    ->numeric()
+                    ->default(1),
+                Forms\Components\TextInput::make('total_harga')
+                    ->required()
+                    ->numeric()
                     ->prefix('Rp'),
                 Forms\Components\Select::make('status')
                     ->options([
                         'pending' => 'Pending',
-                        'bayar' => 'Dibayar',
+                        'bayar' => 'Bayar',
                         'selesai' => 'Selesai',
-                        'batal' => 'Dibatalkan',
+                        'batal' => 'Batal',
                     ])
-                    ->default('pending')
                     ->required(),
+                Forms\Components\Select::make('payment_method')
+                    ->options([
+                        'pay_at_hotel' => 'Pay at Hotel',
+                        'credit_card' => 'Credit Card',
+                    ])
+                    ->required()
+                    ->reactive(),
+                Forms\Components\TextInput::make('credit_card_number')
+                    ->hidden(fn (Forms\Get $get) => $get('payment_method') !== 'credit_card'),
             ]);
     }
 
@@ -57,19 +66,14 @@ class BookingResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('room.nama_kamar')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('tgl_check_in')
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('tgl_check_out')
                     ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('jumlah_kamar')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('total_harga')
                     ->money('IDR')
@@ -78,32 +82,22 @@ class BookingResource extends Resource
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'pending' => 'warning',
-                        'bayar' => 'success',
-                        'selesai' => 'info',
+                        'bayar' => 'info',
+                        'selesai' => 'success',
                         'batal' => 'danger',
-                    })
-                    ->sortable(),
+                    }),
+                Tables\Columns\TextColumn::make('payment_method')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('status')
-                    ->options([
-                        'pending' => 'Pending',
-                        'bayar' => 'Dibayar',
-                        'selesai' => 'Selesai',
-                        'batal' => 'Dibatalkan',
-                    ]),
+                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
