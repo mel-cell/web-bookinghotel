@@ -6,8 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-    <link rel="icon" href="{{ asset('storage/logo.png') }}" type="image/png">
-
+   <link rel="icon" href="{{ asset('logo.png') }}" type="image/png">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -134,10 +133,41 @@
         @yield('content')
     </main>
 
-    <footer class="bg-gray-800 text-white py-8 mt-16">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p>&copy; 2024 Hotel Melvin. All rights reserved.</p>
+   <footer class="bg-gray-800 text-white pt-12 pb-6 mt-16 shadow-2xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 border-b border-gray-700 pb-8 mb-8">
+            
+            <div>
+                <h3 class="text-xl font-bold text-indigo-400 mb-4">CoralWind Suites Hotel</h3>
+                <p class="text-sm text-gray-400">
+                    Wake up to the sound of the ocean and enjoy world-class amenities.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-semibold mb-4 text-gray-200">Navigation</h4>
+                <ul class="space-y-2"> 
+                    <li><a href="/" class="text-gray-400 hover:text-indigo-400 transition duration-300 text-sm">Home</a></li>
+                    <li><a href="/rooms" class="text-gray-400 hover:text-indigo-400 transition duration-300 text-sm">Rooms</a></li>
+                    <li><a href="/about" class="text-gray-400 hover:text-indigo-400 transition duration-300 text-sm">About</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="text-lg font-semibold mb-4 text-gray-200">Hubungi Kami</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li>Jl. Pantai Indah No. 88, Bali</li>
+                    <li>(021) 123-4567</li>
+                    <li>info@coralwindsuites.com</li>
+                </ul>
+            </div>
+
         </div>
-    </footer>
+        
+        <div class="text-center">
+            <p class="text-sm text-gray-500">&copy; 2024 CoralWind Suites Hotel. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
 </body>
 </html>
