@@ -120,7 +120,7 @@
                         <div class="flex items-center space-x-4">
                             <a href="{{ route('login') }}" class="text-gray-600 font-medium hover:text-primary border px-4 py-2.5 rounded-full transition-colors" style="border-color: #5E8B94;">Log in</a>
                             @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="bg-primary text-white px-6 py-2.5 rounded-full font-bold hover:bg-[#5E8B94] transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">Register</a>
+                                <a href="{{ route('register') }}" class= text-white px-6 py-2.5 rounded-full font-bold hover:bg-[#5E8B94] transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">Register</a>
                             @endif
                         </div>
                     @endauth
