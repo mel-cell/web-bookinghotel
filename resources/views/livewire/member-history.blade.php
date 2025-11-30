@@ -74,8 +74,10 @@
                                     <button wire:click="openReviewForm({{ $booking->id }})" class="w-full md:w-auto bg-white border border-primary text-primary px-4 py-1.5 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-all shadow-sm hover:shadow flex items-center justify-center">
                                         Write Review
                                     </button>
-                                @elseif($booking->status === 'pending')
-                                    <button wire:click="cancelBooking({{ $booking->id }})" wire:confirm="Are you sure you want to cancel this booking?" class="w-full md:w-auto bg-white border border-red-500 text-red-500 px-4 py-1.5 rounded-full font-bold text-xs hover:bg-red-500 hover:text-white transition-all shadow-sm hover:shadow flex items-center justify-center">
+                                @elseif($booking->status === 'pending' || $booking->status === 'bayar')
+                                    <button wire:click="cancelBooking({{ $booking->id }})" 
+                                            wire:confirm="{{ $booking->status === 'bayar' ? 'Apakah Anda yakin ingin membatalkan booking ini? Dana akan dikembalikan dalam waktu 15 menit. Jika belum diterima, silakan hubungi nomor yang tertera di footer.' : 'Are you sure you want to cancel this booking?' }}" 
+                                            class="w-full md:w-auto bg-white border border-red-500 text-red-500 px-4 py-1.5 rounded-full font-bold text-xs hover:bg-red-500 hover:text-white transition-all shadow-sm hover:shadow flex items-center justify-center">
                                         Cancel Booking
                                     </button>
                                 @elseif($booking->review)

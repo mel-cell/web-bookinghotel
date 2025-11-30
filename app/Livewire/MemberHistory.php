@@ -123,10 +123,15 @@ class MemberHistory extends Component
     {
         $booking = $this->bookings->find($bookingId);
 
-        if ($booking && $booking->status === 'pending') {
+        if ($booking && ($booking->status === 'pending' || $booking->status === 'bayar')) {
             $booking->update(['status' => 'batal']);
             $this->loadBookings();
-            session()->flash('message', 'Booking berhasil dibatalkan.');
+            
+            $message = $booking->status === 'bayar' 
+                ? 'Booking berhasil dibatalkan. Dana akan dikembalikan dalam 15 menit.' 
+                : 'Booking berhasil dibatalkan.';
+                
+            session()->flash('message', $message);
         }
     }
 

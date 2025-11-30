@@ -112,5 +112,55 @@ class RoomSeeder extends Seeder
             'status' => 'tersedia',
             'rating' => 9.9,
         ]);
+
+        Room::create([
+            'nama_kamar' => 'Junior Suite',
+            'tipe_kamar' => 'Suite',
+            'harga' => 2200000,
+            'deskripsi' => 'A stylish suite with a separate living area, perfect for couples.',
+            'gambar' => 'https://images.unsplash.com/photo-1595576508898-0ad5c879a061?ixlib=rb-4.0.3&auto=format&fit=crop&w=1974&q=80',
+            'status' => 'tersedia',
+            'rating' => 9.0,
+        ]);
+
+        Room::create([
+            'nama_kamar' => 'Beachfront Villa',
+            'tipe_kamar' => 'Villa',
+            'harga' => 5500000,
+            'deskripsi' => 'Step directly onto the sand from your private terrace.',
+            'gambar' => 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+            'status' => 'tersedia',
+            'rating' => 9.9,
+        ]);
+
+        Room::create([
+            'nama_kamar' => 'Twin Room',
+            'tipe_kamar' => 'Standard',
+            'harga' => 1000000,
+            'deskripsi' => 'Comfortable room with two single beds, ideal for friends.',
+            'gambar' => 'https://images.unsplash.com/photo-1560185474-b7301786e0eb?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+            'status' => 'tersedia',
+            'rating' => 8.2,
+        ]);
+
+        Room::create([
+            'nama_kamar' => 'Sky Penthouse',
+            'tipe_kamar' => 'Suite',
+            'harga' => 12000000,
+            'deskripsi' => 'Top-floor luxury with a private infinity pool and city views.',
+            'gambar' => 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=2080&q=80',
+            'status' => 'tersedia',
+            'rating' => 9.9,
+        ]);
+
+        Room::create([
+            'nama_kamar' => 'Garden Studio',
+            'tipe_kamar' => 'Deluxe',
+            'harga' => 1800000,
+            'deskripsi' => 'A quiet retreat with a private patio facing the gardens.',
+            'gambar' => 'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+            'status' => 'tersedia',
+            'rating' => 8.8,
+        ]);
     }
 }

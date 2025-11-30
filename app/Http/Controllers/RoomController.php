@@ -81,7 +81,7 @@ class RoomController extends Controller
         // Fetch booked dates
         $bookedDates = \App\Models\Booking::where('room_id', $room->id)
             ->where(function ($query) {
-                $query->whereIn('status', ['bayar', 'pending']) // Include 'bayar' if used
+                $query->whereIn('status', ['bayar', 'pending']) 
                       ->whereNotIn('status', ['batal']);
             })
             ->where('tgl_check_out', '>=', Carbon::today())
