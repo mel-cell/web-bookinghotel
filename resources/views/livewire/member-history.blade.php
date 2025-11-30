@@ -1,9 +1,9 @@
 <div class="min-h-screen bg-gray-50 py-12">
-    @if (session()->has('message'))
+    @if (session()->has('message') || session()->has('success'))
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
             <div class="bg-[#E0F2F1] border border-[#74A6AF] text-[#74A6AF] px-6 py-4 rounded-2xl flex items-center shadow-sm">
                 <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                <span class="font-medium">{{ session('message') }}</span>
+                <span class="font-medium">{{ session('message') ?? session('success') }}</span>
             </div>
         </div>
     @endif

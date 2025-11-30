@@ -26,9 +26,17 @@ class BookingController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // Update user's phone number if it's different or empty
+        // Update user's phone number and NIK if they are different or empty
+        $updateData = [];
         if ($user->no_hp !== $request->no_hp) {
-            $user->update(['no_hp' => $request->no_hp]);
+            $updateData['no_hp'] = $request->no_hp;
+        }
+        if ($user->nik !== $request->nik) {
+            $updateData['nik'] = $request->nik;
+        }
+
+        if (!empty($updateData)) {
+            $user->update($updateData);
         }
 
         $room = Room::findOrFail($request->room_id);
