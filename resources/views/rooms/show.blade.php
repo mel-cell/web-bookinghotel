@@ -198,6 +198,30 @@
                 <div class="sticky top-24 bg-white rounded-[2rem] shadow-2xl p-8 border border-gray-100">
                     <h3 class="text-2xl font-bold text-gray-900 mb-6">Book Room</h3>
                     
+                    @if ($errors->any())
+                        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-xl">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <h3 class="text-sm font-bold text-red-800">
+                                        There were problems with your booking:
+                                    </h3>
+                                    <div class="mt-2 text-sm text-red-700">
+                                        <ul class="list-disc pl-5 space-y-1">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                    
                     <form action="{{ route('bookings.store') }}" method="POST" id="bookingForm">
                         @csrf
                         <input type="hidden" name="room_id" value="{{ $room->id }}">
@@ -210,16 +234,16 @@
                             <input type="text" value="{{ Auth::user()->name ?? '' }}" class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-primary focus:bg-white focus:ring-0 transition-all" readonly>
                         </div>
 
-                        <!-- NIK -->
+                        <!-- `NIK -->
                         <div class="mb-4">
                             <label class="block text-sm font-bold text-gray-700 mb-2">NIK (National ID)</label>
-                            <input type="text" name="nik" class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-primary focus:bg-white focus:ring-0 transition-all" placeholder="Enter your NIK" required>
+                            <input type="text" name="nik" value="{{ old('nik', Auth::user()->nik ?? '') }}" class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-primary focus:bg-white focus:ring-0 transition-all" placeholder="Enter your NIK" required>
                         </div>
 
                         <!-- Phone Number -->
                         <div class="mb-4">
                             <label class="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
-                            <input type="text" name="no_hp" value="{{ Auth::user()->no_hp ?? '' }}" class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-primary focus:bg-white focus:ring-0 transition-all" placeholder="Enter your phone number" required>
+                            <input type="text" name="no_hp" value="{{ old('no_hp', Auth::user()->no_hp ?? '') }}" class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-primary focus:bg-white focus:ring-0 transition-all" placeholder="Enter your phone number" required>
                         </div>
                         
                         <!-- Date Range Picker -->
@@ -238,15 +262,15 @@
                         <div class="mb-4">
                             <label class="block text-sm font-bold text-gray-700 mb-2">Payment Method</label>
                             <select name="payment_method" id="payment_method_select" class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-primary focus:bg-white focus:ring-0 transition-all" required>
-                                <option value="pay_at_hotel">Pay at Hotel</option>
-                                <option value="credit_card">Credit Card</option>
+                                <option value="pay_at_hotel" {{ old('payment_method') == 'pay_at_hotel' ? 'selected' : '' }}>Pay at Hotel</option>
+                                <option value="credit_card" {{ old('payment_method') == 'credit_card' ? 'selected' : '' }}>Credit Card</option>
                             </select>
                         </div>
 
                         <!-- Credit Card Input (Hidden by default) -->
-                        <div class="mb-4 hidden" id="credit_card_field">
+                        <div class="mb-4 {{ old('payment_method') == 'credit_card' ? '' : 'hidden' }}" id="credit_card_field">
                             <label class="block text-sm font-bold text-gray-700 mb-2">Credit Card Number</label>
-                            <input type="text" name="credit_card_number" id="credit_card_input" class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-primary focus:bg-white focus:ring-0 transition-all" placeholder="XXXX-XXXX-XXXX-XXXX">
+                            <input type="text" name="credit_card_number" id="credit_card_input" value="{{ old('credit_card_number') }}" class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-primary focus:bg-white focus:ring-0 transition-all" placeholder="XXXX-XXXX-XXXX-XXXX">
                         </div>
 
                         <!-- Discount Selection -->
